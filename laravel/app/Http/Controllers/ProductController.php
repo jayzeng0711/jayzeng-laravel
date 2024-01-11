@@ -13,7 +13,8 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        //
+        $data = $this->getdata();
+        return response($data);
     }
 
     /**
@@ -34,7 +35,9 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $this->getdata();
+        $data->push(collect($request->all()));
+        return response($data);
     }
 
     /**
@@ -68,7 +71,11 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $form = $request->all();
+        $data = $this->getData();
+        $selectData = $data->where('id', $id)->first();
+        $selectData = $selectData->merge(collect($form));
+        return response($selectData);
     }
 
     /**
@@ -79,6 +86,28 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $data = $this->getData();
+        $data = $data->filter(function ($product) use ($id) {
+            return $product['id'] != $id;
+        });
+        return response($data->values());
+    }
+
+    public function getdata()
+    {
+        return collect([
+            collect([
+                'id' => 0,
+                'title' => '測試商品一',
+                'content' => '很棒',
+                'price' => 30
+            ]),
+            collect([
+                'id' => 1,
+                'title' => '測試商品一',
+                'content' => '很棒',
+                'price' => 30
+            ]),
+        ]);
     }
 }
