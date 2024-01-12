@@ -18,4 +18,7 @@ Route::get('/', function () {
 });
 Route::resource('products', 'ProductController');
 Route::resource('carts', 'CartController');
-Route::resource('cart_items', 'CartItemController');
+
+Route::group(['middleware' => 'check.dirty'], function () {
+    Route::resource('cart_items', 'CartItemController');
+});
