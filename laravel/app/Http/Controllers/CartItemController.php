@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Cart;
+use App\Models\CartItem;
 
 class CartItemController extends Controller
 {
@@ -48,16 +50,11 @@ class CartItemController extends Controller
             return response($validator->errors(), 400);
         }
         $validata = $validator->validate();
-        DB::table('cart_items')->insert(
-            [
-                'cart_id' => $validata['cart_id'],
-                'quantity' => $validata['quantity'],
-                'product_id' => $validata['product_id'],
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
-        );
-        return response()->json(true);
+        $result = Cart::find($validata['cart_id'])->cartItems()->create([
+            'quantity' => $validata['quantity'],
+            'product_id' => $validata['product_id'],
+        ]);
+        return response()->json($result);
     }
 
     /**
@@ -92,12 +89,8 @@ class CartItemController extends Controller
     public function update(Request $request, $id)
     {
         $form = $request->all();
-        DB::table('cart_items')->where('id', $id)->update(
-            [
-                'quantity' => $form['quantity'],
-                'updated_at' => now(),
-            ]
-        );
+        $item = CartItem::find($id);
+        $item->update(['quantity' => $form['quantity']]);
         return response()->json(true);
     }
 

@@ -16,11 +16,11 @@ class CheckDirtyWord
      */
     public function handle(Request $request, Closure $next)
     {
-        $dirtyWords = ['apple', 'orange'];
-        $paras = $request->all()['content'];
-        if(in_array($paras, $dirtyWords)){
-            return response('dirty', 400);
-        }
+        // $dirtyWords = ['apple', 'orange'];
+        // $paras = $request->all()['content'];
+        // if(in_array($paras, $dirtyWords)){
+        //     return response('dirty', 400);
+        // }
         return $next($request);
     }
 }
